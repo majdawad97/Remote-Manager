@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 
 class IntroPage1 extends StatelessWidget {
@@ -11,9 +12,19 @@ class IntroPage1 extends StatelessWidget {
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text('Manage your Company'),
+          Text(
+            'Manage your Company',
+            style: GoogleFonts.sourceSansPro(
+                fontWeight: FontWeight.bold, fontSize: 30),
+          ),
           Lottie.asset('assets/animations/manager.json'),
-          Text('Be on top of your work from home'),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 25),
+            child: Text(
+              'Stay on Top of your Business and Keep track of your teams as a Company Manager',
+              style: GoogleFonts.roboto(fontSize: 20),
+            ),
+          ),
         ],
       ),
     );

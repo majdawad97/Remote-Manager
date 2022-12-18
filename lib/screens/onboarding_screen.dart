@@ -1,9 +1,13 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:remote_manager/screens/auth_page.dart';
 import 'package:remote_manager/screens/intro_screens/intro_page_1.dart';
 import 'package:remote_manager/screens/intro_screens/intro_page_2.dart';
 import 'package:remote_manager/screens/intro_screens/intro_page_3.dart';
 import 'package:remote_manager/screens/login_page.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+
+import 'home_page.dart';
 
 class OnBoardingScreen extends StatefulWidget {
   const OnBoardingScreen({super.key});
@@ -67,7 +71,26 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                           context,
                           MaterialPageRoute(
                             builder: (context) {
-                              return LoginPage();
+                              return StreamBuilder<User?>(
+                                stream:
+                                    FirebaseAuth.instance.authStateChanges(),
+                                builder: (context, snapshot) {
+                                  if (snapshot.connectionState ==
+                                      ConnectionState.waiting) {
+                                    return Center(
+                                      child: CircularProgressIndicator(),
+                                    );
+                                  } else if (snapshot.hasError) {
+                                    return Center(
+                                      child: Text('Something went wrong!'),
+                                    );
+                                  } else if (snapshot.hasData) {
+                                    return HomePage();
+                                  } else {
+                                    return AuthPage();
+                                  }
+                                },
+                              );
                             },
                           ),
                         );

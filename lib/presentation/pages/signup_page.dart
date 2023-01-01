@@ -2,15 +2,16 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-
-import 'package:remote_manager/screens/login_page.dart';
-import 'package:remote_manager/util/text_field.dart';
+import 'package:remote_manager/data/models/user_role.dart';
+import 'package:remote_manager/presentation/pages/login_page.dart';
+import 'package:remote_manager/presentation/widgets/text_field.dart';
+import 'package:remote_manager/data/models/user.dart';
 
 class SignUpPage extends StatefulWidget {
-  final Function() onClickedSignIn;
+  final Function()? onClickedSignIn;
   const SignUpPage({
     Key? key,
-    required this.onClickedSignIn,
+    this.onClickedSignIn,
   }) : super(key: key);
 
   @override
@@ -22,6 +23,8 @@ class _SignUpPageState extends State<SignUpPage> {
   final _emailController = TextEditingController();
   final _numberController = TextEditingController();
   final _passwordController = TextEditingController();
+
+  UserRole userRole = UserRole.basic;
 
   @override
   void dispose() {
@@ -42,19 +45,24 @@ class _SignUpPageState extends State<SignUpPage> {
 
       // add user details
       await addUserDetails(
-        _nameController.text.trim(),
-        _emailController.text.trim(),
-        int.parse(_numberController.text.trim()),
+        UserModel(
+          userFullName: _nameController.text.trim(),
+          userEmail: _emailController.text.trim(),
+          userNumber: int.parse(_numberController.text),
+          userRole: userRole,
+        ),
       );
     }
   }
 
-  Future addUserDetails(String fullName, String email, int number) async {
-    await FirebaseFirestore.instance.collection('users').add({
-      'full name': fullName,
-      'email': email,
-      'number': number,
-    });
+  Future addUserDetails(UserModel user) async {
+    User? currentUser = FirebaseAuth.instance.currentUser;
+    if (currentUser != null) {
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(currentUser.uid)
+          .set(user.toJson());
+    }
   }
 
   @override
@@ -104,25 +112,50 @@ class _SignUpPageState extends State<SignUpPage> {
                 icon: Icons.remove_red_eye,
                 obscureText: true,
               ),
+              DropdownButton<UserRole>(
+                value: userRole,
+                hint: Text(
+                  'Choose Role',
+                  style: TextStyle(
+                    color: Color(0xFF56585F),
+                  ),
+                ),
+                items: UserRole.values.map((UserRole userRole) {
+                  return DropdownMenuItem<UserRole>(
+                    value: userRole,
+                    child: Text(
+                      userRole.toString(),
+                    ),
+                  );
+                }).toList(),
+                onChanged: (value) {
+                  setState(() {
+                    if (value != null) {
+                      userRole = value;
+                    }
+                  });
+                },
+              ),
               SizedBox(
-                height: 50,
+                height: 40,
               ),
               Padding(
                 padding: const EdgeInsets.all(20.0),
                 child: GestureDetector(
                   onTap: signUp,
                   child: Container(
-                    child: Center(
-                        child: Text(
-                      'Sign Up',
-                      style: TextStyle(
-                          color: Colors.white, fontWeight: FontWeight.bold),
-                    )),
                     height: 80,
                     width: double.infinity,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(25),
                       color: Color(0xFF4C4CFF),
+                    ),
+                    child: Center(
+                      child: Text(
+                        'Sign Up',
+                        style: TextStyle(
+                            color: Colors.white, fontWeight: FontWeight.bold),
+                      ),
                     ),
                   ),
                 ),

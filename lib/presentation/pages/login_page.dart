@@ -1,17 +1,18 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:remote_manager/main.dart';
-import 'package:remote_manager/screens/forgot_password_page.dart';
-import 'package:remote_manager/screens/signup_page.dart';
-import 'package:remote_manager/util/custom_button.dart';
-import 'package:remote_manager/util/text_field.dart';
+import 'package:remote_manager/presentation/pages/customer_page.dart';
+import 'package:remote_manager/presentation/pages/forgot_password_page.dart';
+import 'package:remote_manager/presentation/pages/manager_page.dart';
+import 'package:remote_manager/presentation/widgets/custom_button.dart';
+import 'package:remote_manager/presentation/widgets/text_field.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class LoginPage extends StatefulWidget {
-  final VoidCallback onClickedSignUp;
+  final VoidCallback? onClickedSignUp;
   const LoginPage({
     Key? key,
-    required this.onClickedSignUp,
+    this.onClickedSignUp,
   }) : super(key: key);
   @override
   State<LoginPage> createState() => _LoginPageState();
@@ -28,12 +29,69 @@ class _LoginPageState extends State<LoginPage> {
     super.dispose();
   }
 
+  Future<String?> getField() async {
+    try {
+      User? user = FirebaseAuth.instance.currentUser;
+      // print(user!.email);
+      CollectionReference users =
+          FirebaseFirestore.instance.collection('users');
+      final snapshot = await users.doc(user!.uid).get();
+      final data = snapshot.data() as Map<String, dynamic>;
+      return data['user_role'];
+    } catch (e) {
+      return 'Error fetching user';
+    }
+  }
+
+  void route() async {
+    final userRole = await getField();
+    if (userRole == 'manager') {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => ManagerPage(),
+        ),
+      );
+    } else {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => CustomerPage(),
+        ),
+      );
+    }
+  }
+
+  // Future getData() async {
+  //   User? user = FirebaseAuth.instance.currentUser;
+  //   final users = FirebaseFirestore.instance
+  //       .collection('users')
+  //       .doc(user!.uid)
+  //       .get()
+  //       .then((value) => value)
+  //       .then((value) => value.data());
+  //   return FutureBuilder(
+  //     future: users,
+  //     builder: (context, snapshot) {
+  //       if (snapshot.hasData) {
+  //         final convertUserDataToMap =
+  //             Map<String, dynamic>.from(snapshot.data as Map<dynamic, dynamic>);
+  //         final List userDataList = convertUserDataToMap.values.toList();
+  //         final userId = userDataList[0];
+  //         final userLong = userDataList[1];
+  //       }
+  //     },
+  //   );
+  // }
+
   Future signIn() async {
     try {
       await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: _emailController.text.trim(),
         password: _passwordController.text.trim(),
       );
+      getField();
+      route();
     } on FirebaseAuthException catch (e) {
       print(e);
     }
@@ -103,6 +161,7 @@ class _LoginPageState extends State<LoginPage> {
               ),
               CustomButton(
                 buttonTapped: signIn,
+                color: 0xFF4C4CFF,
                 child: Center(
                   child: Text(
                     'Sign In',
@@ -110,9 +169,9 @@ class _LoginPageState extends State<LoginPage> {
                         color: Colors.white, fontWeight: FontWeight.bold),
                   ),
                 ),
-                color: 0xFF4C4CFF,
               ),
               CustomButton(
+                color: 0xFFFFFFFF,
                 child: Center(
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -129,7 +188,6 @@ class _LoginPageState extends State<LoginPage> {
                     ],
                   ),
                 ),
-                color: 0xFFFFFFFF,
               ),
               SizedBox(height: 30),
               RichText(
@@ -157,33 +215,3 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 }
-
-
-//  Row(
-//                 mainAxisAlignment: MainAxisAlignment.center,
-//                 children: [
-//                   Text(
-//                     'Don\'t have an account? ',
-//                     style: TextStyle(color: Colors.white),
-//                   ),
-//                   GestureDetector(
-//                     onTap: () {
-//                       Navigator.push(
-//                         context,
-//                         MaterialPageRoute(
-//                           builder: (context) {
-//                             return SignUpPage();
-//                           },
-//                         ),
-//                       );
-//                     },
-//                     child: Text(
-//                       'Sign Up',
-//                       style: TextStyle(
-//                         color: Color(0xFF4C4CFF),
-//                         fontWeight: FontWeight.bold,
-//                       ),
-//                     ),
-//                   )
-//                 ],
-//               ),

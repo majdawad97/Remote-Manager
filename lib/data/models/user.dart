@@ -17,7 +17,16 @@ class UserModel {
       'full_name': userFullName,
       'email': userEmail,
       'number': userNumber,
-      'user_role': userRole.toJson(),
+      'user_role': userRole,
     };
+  }
+
+  static UserModel fromJson(Map<String, dynamic> data) {
+    return UserModel(
+      userFullName: data['full_name'],
+      userEmail: data['email'],
+      userNumber: data['number'],
+      userRole: data['user_role'],
+    );
   }
 }

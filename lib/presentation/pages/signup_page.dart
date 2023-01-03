@@ -1,11 +1,8 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:remote_manager/data/models/user_role.dart';
-import 'package:remote_manager/presentation/pages/login_page.dart';
+import 'package:remote_manager/data/repositories/auth_repository.dart';
 import 'package:remote_manager/presentation/widgets/text_field.dart';
-import 'package:remote_manager/data/models/user.dart';
 
 class SignUpPage extends StatefulWidget {
   final Function()? onClickedSignIn;
@@ -35,60 +32,30 @@ class _SignUpPageState extends State<SignUpPage> {
     super.dispose();
   }
 
-  Future signUp() async {
-    {
-      // create user
-      await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: _emailController.text.trim(),
-        password: _passwordController.text.trim(),
-      );
-
-      // add user details
-      await addUserDetails(
-        UserModel(
-          userFullName: _nameController.text.trim(),
-          userEmail: _emailController.text.trim(),
-          userNumber: int.parse(_numberController.text),
-          userRole: userRole,
-        ),
-      );
-    }
-  }
-
-  Future addUserDetails(UserModel user) async {
-    User? currentUser = FirebaseAuth.instance.currentUser;
-    if (currentUser != null) {
-      await FirebaseFirestore.instance
-          .collection('users')
-          .doc(currentUser.uid)
-          .set(user.toJson());
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFF181A20),
+      backgroundColor: const Color(0xFF181A20),
       body: Center(
         child: SingleChildScrollView(
           child: Column(
             children: [
-              SizedBox(height: 30),
-              Text(
+              const SizedBox(height: 30),
+              const Text(
                 'Create new account',
                 style: TextStyle(
                     color: Colors.white,
                     fontSize: 30,
                     fontWeight: FontWeight.bold),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 15,
               ),
-              Text(
+              const Text(
                 'Please fill in the form to continue',
                 style: TextStyle(color: Color(0xFF5A5C61), fontSize: 18),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 60,
               ),
               CustomTextField(
@@ -114,7 +81,7 @@ class _SignUpPageState extends State<SignUpPage> {
               ),
               DropdownButton<UserRole>(
                 value: userRole,
-                hint: Text(
+                hint: const Text(
                   'Choose Role',
                   style: TextStyle(
                     color: Color(0xFF56585F),
@@ -136,21 +103,27 @@ class _SignUpPageState extends State<SignUpPage> {
                   });
                 },
               ),
-              SizedBox(
+              const SizedBox(
                 height: 40,
               ),
               Padding(
                 padding: const EdgeInsets.all(20.0),
                 child: GestureDetector(
-                  onTap: signUp,
+                  onTap: () => AuthRepository.signUp(
+                    email: _emailController.text,
+                    password: _passwordController.text,
+                    name: _nameController.text,
+                    number: _numberController.text,
+                    userRole: userRole,
+                  ),
                   child: Container(
                     height: 80,
                     width: double.infinity,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(25),
-                      color: Color(0xFF4C4CFF),
+                      color: const Color(0xFF4C4CFF),
                     ),
-                    child: Center(
+                    child: const Center(
                       child: Text(
                         'Sign Up',
                         style: TextStyle(
@@ -160,10 +133,10 @@ class _SignUpPageState extends State<SignUpPage> {
                   ),
                 ),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               RichText(
                 text: TextSpan(
-                    style: TextStyle(
+                    style: const TextStyle(
                       color: Colors.white,
                     ),
                     text: 'Have an account? ',
@@ -172,7 +145,7 @@ class _SignUpPageState extends State<SignUpPage> {
                         recognizer: TapGestureRecognizer()
                           ..onTap = widget.onClickedSignIn,
                         text: 'Sign In',
-                        style: TextStyle(
+                        style: const TextStyle(
                           color: Color(0xFF4C4CFF),
                           fontWeight: FontWeight.bold,
                         ),
@@ -186,33 +159,3 @@ class _SignUpPageState extends State<SignUpPage> {
     );
   }
 }
-
-
-    //  Row(
-    //             mainAxisAlignment: MainAxisAlignment.center,
-    //             children: [
-    //               Text(
-    //                 'Have an account? ',
-    //                 style: TextStyle(color: Colors.white),
-    //               ),
-    //               GestureDetector(
-    //                 onTap: () {
-    //                   Navigator.push(
-    //                     context,
-    //                     MaterialPageRoute(
-    //                       builder: (context) {
-    //                         return LoginPage();
-    //                       },
-    //                     ),
-    //                   );
-    //                 },
-    //                 child: Text(
-    //                   'Sign In',
-    //                   style: TextStyle(
-    //                     color: Color(0xFF4C4CFF),
-    //                     fontWeight: FontWeight.bold,
-    //                   ),
-    //                 ),
-    //               )
-    //             ],
-    //           ),

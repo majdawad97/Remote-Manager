@@ -1,13 +1,13 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:remote_manager/data/models/user_role.dart';
 import 'package:remote_manager/data/repositories/auth_repository.dart';
 import 'package:remote_manager/data/repositories/user_repository.dart';
-import 'package:remote_manager/presentation/pages/customer_page.dart';
 import 'package:remote_manager/presentation/pages/forgot_password_page.dart';
-import 'package:remote_manager/presentation/pages/manager_page.dart';
+import 'package:remote_manager/presentation/pages/signup_page.dart';
 import 'package:remote_manager/presentation/widgets/custom_button.dart';
 import 'package:remote_manager/presentation/widgets/text_field.dart';
+
+import '../helpers/routing.dart';
 
 class LoginPage extends StatefulWidget {
   final VoidCallback? onClickedSignUp;
@@ -28,24 +28,6 @@ class _LoginPageState extends State<LoginPage> {
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
-  }
-
-  void route(UserRole userRole) {
-    if (userRole == UserRole.manager) {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => const ManagerPage(),
-        ),
-      );
-    } else {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => const CustomerPage(),
-        ),
-      );
-    }
   }
 
   @override
@@ -117,7 +99,7 @@ class _LoginPageState extends State<LoginPage> {
                         _emailController.text, _passwordController.text);
                     final user = await UserRepository.getUser();
                     if (user != null) {
-                      route(user.userRole);
+                      route(user.userRole, context);
                     }
                   } catch (e) {}
                 },
@@ -159,7 +141,11 @@ class _LoginPageState extends State<LoginPage> {
                     children: [
                       TextSpan(
                         recognizer: TapGestureRecognizer()
-                          ..onTap = widget.onClickedSignUp,
+                          ..onTap = () => Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const SignUpPage(),
+                              )),
                         text: 'Sign Up',
                         style: const TextStyle(
                           color: Color(0xFF4C4CFF),

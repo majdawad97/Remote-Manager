@@ -2,6 +2,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:remote_manager/data/models/user_role.dart';
 import 'package:remote_manager/data/repositories/auth_repository.dart';
+import 'package:remote_manager/presentation/pages/login_page.dart';
 import 'package:remote_manager/presentation/widgets/text_field.dart';
 
 class SignUpPage extends StatefulWidget {
@@ -143,7 +144,12 @@ class _SignUpPageState extends State<SignUpPage> {
                     children: [
                       TextSpan(
                         recognizer: TapGestureRecognizer()
-                          ..onTap = widget.onClickedSignIn,
+                          ..onTap = () => Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const LoginPage(),
+                                ),
+                              ),
                         text: 'Sign In',
                         style: const TextStyle(
                           color: Color(0xFF4C4CFF),

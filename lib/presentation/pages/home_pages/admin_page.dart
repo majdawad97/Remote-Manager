@@ -3,14 +3,14 @@ import 'package:flutter/material.dart';
 
 import '../auth_pages/login_page.dart';
 
-class ManagerPage extends StatefulWidget {
-  const ManagerPage({super.key});
+class AdminPage extends StatefulWidget {
+  const AdminPage({super.key});
 
   @override
-  State<ManagerPage> createState() => _ManagerPageState();
+  State<AdminPage> createState() => _AdminPageState();
 }
 
-class _ManagerPageState extends State<ManagerPage> {
+class _AdminPageState extends State<AdminPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -18,7 +18,7 @@ class _ManagerPageState extends State<ManagerPage> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           const Center(
-            child: Text('you are a manager'),
+            child: Text('you are Admin'),
           ),
           TextButton(
             onPressed: () {

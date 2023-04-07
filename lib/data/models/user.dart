@@ -17,7 +17,7 @@ class UserModel {
       'full_name': userFullName,
       'email': userEmail,
       'number': userNumber,
-      'user_role': userRole,
+      'user_role': userRole.toJson(),
     };
   }
 
@@ -26,7 +26,7 @@ class UserModel {
       userFullName: data['full_name'],
       userEmail: data['email'],
       userNumber: data['number'],
-      userRole: data['user_role'],
+      userRole: UserRole.fromJson(data['user_role']),
     );
   }
 }

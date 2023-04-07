@@ -5,9 +5,8 @@ import 'package:remote_manager/presentation/pages/intro_pages/intro_page_1.dart'
 import 'package:remote_manager/presentation/pages/intro_pages/intro_page_2.dart';
 import 'package:remote_manager/presentation/pages/intro_pages/intro_page_3.dart';
 import 'package:remote_manager/presentation/pages/auth_pages/login_page.dart';
+import 'package:remote_manager/splash_screen.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
-
-import '../home_page.dart';
 
 class OnBoardingScreen extends StatefulWidget {
   const OnBoardingScreen({super.key});
@@ -98,7 +97,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                                       child: Text('Something went wrong!'),
                                     );
                                   } else if (snapshot.hasData) {
-                                    return const HomePage();
+                                    return const SplashScreen();
                                   } else {
                                     return const LoginPage();
                                   }

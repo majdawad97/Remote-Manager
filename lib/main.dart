@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:remote_manager/presentation/pages/onboarding_screen.dart';
+import 'package:remote_manager/presentation/pages/intro_pages/onboarding_screen.dart';
 import 'firebase_options.dart';
 
 Future<void> main() async {

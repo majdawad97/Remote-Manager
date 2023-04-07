@@ -2,12 +2,12 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:remote_manager/data/repositories/auth_repository.dart';
 import 'package:remote_manager/data/repositories/user_repository.dart';
-import 'package:remote_manager/presentation/pages/forgot_password_page.dart';
-import 'package:remote_manager/presentation/pages/signup_page.dart';
+import 'package:remote_manager/presentation/pages/auth_pages/forgot_password_page.dart';
+import 'package:remote_manager/presentation/pages/auth_pages/signup_page.dart';
 import 'package:remote_manager/presentation/widgets/custom_button.dart';
 import 'package:remote_manager/presentation/widgets/text_field.dart';
 
-import '../helpers/routing.dart';
+import '../../helpers/routing.dart';
 
 class LoginPage extends StatefulWidget {
   final VoidCallback? onClickedSignUp;
@@ -94,14 +94,22 @@ class _LoginPageState extends State<LoginPage> {
               ),
               CustomButton(
                 buttonTapped: () async {
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      return const Center(child: CircularProgressIndicator());
+                    },
+                  );
                   try {
                     AuthRepository.signIn(
                         _emailController.text, _passwordController.text);
                     final user = await UserRepository.getUser();
-                    if (user != null) {
-                      route(user.userRole, context);
+                    if (user != null && mounted) {
+                      routeUser(user.userRole, context);
                     }
-                  } catch (e) {}
+                  } catch (e) {
+                    print(e);
+                  }
                 },
                 color: 0xFF4C4CFF,
                 child: const Center(

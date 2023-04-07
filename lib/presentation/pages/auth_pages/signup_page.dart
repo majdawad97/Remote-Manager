@@ -2,7 +2,8 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:remote_manager/data/models/user_role.dart';
 import 'package:remote_manager/data/repositories/auth_repository.dart';
-import 'package:remote_manager/presentation/pages/login_page.dart';
+import 'package:remote_manager/presentation/pages/auth_pages/login_page.dart';
+import 'package:remote_manager/presentation/widgets/custom_button.dart';
 import 'package:remote_manager/presentation/widgets/text_field.dart';
 
 class SignUpPage extends StatefulWidget {
@@ -22,7 +23,7 @@ class _SignUpPageState extends State<SignUpPage> {
   final _numberController = TextEditingController();
   final _passwordController = TextEditingController();
 
-  UserRole userRole = UserRole.basic;
+  UserRole userRole = UserRole.customer;
 
   @override
   void dispose() {
@@ -81,6 +82,10 @@ class _SignUpPageState extends State<SignUpPage> {
                 obscureText: true,
               ),
               DropdownButton<UserRole>(
+                style: const TextStyle(
+                  color: Color(0xFF5A5C61),
+                ),
+                dropdownColor: const Color(0xFF181A20),
                 value: userRole,
                 hint: const Text(
                   'Choose Role',
@@ -107,33 +112,56 @@ class _SignUpPageState extends State<SignUpPage> {
               const SizedBox(
                 height: 40,
               ),
-              Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: GestureDetector(
-                  onTap: () => AuthRepository.signUp(
-                    email: _emailController.text,
-                    password: _passwordController.text,
-                    name: _nameController.text,
-                    number: _numberController.text,
-                    userRole: userRole,
-                  ),
-                  child: Container(
-                    height: 80,
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(25),
-                      color: const Color(0xFF4C4CFF),
-                    ),
-                    child: const Center(
-                      child: Text(
-                        'Sign Up',
-                        style: TextStyle(
-                            color: Colors.white, fontWeight: FontWeight.bold),
+              CustomButton(
+                  buttonTapped: () async {
+                    AuthRepository.signUp(
+                      email: _emailController.text,
+                      password: _passwordController.text,
+                      name: _nameController.text,
+                      number: _numberController.text,
+                      userRole: userRole,
+                    );
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Account Created Successfully'),
                       ),
+                    );
+                  },
+                  color: 0xFF4C4CFF,
+                  child: const Center(
+                    child: Text(
+                      'Sign Up',
+                      style: TextStyle(
+                          color: Colors.white, fontWeight: FontWeight.bold),
                     ),
-                  ),
-                ),
-              ),
+                  )),
+              // Padding(
+              //   padding: const EdgeInsets.all(20.0),
+              //   child: GestureDetector(
+              //     onTap: () => AuthRepository.signUp(
+              //       email: _emailController.text,
+              //       password: _passwordController.text,
+              //       name: _nameController.text,
+              //       number: _numberController.text,
+              //       userRole: userRole,
+              //     ),
+              //     child: Container(
+              //       height: 80,
+              //       width: double.infinity,
+              //       decoration: BoxDecoration(
+              //         borderRadius: BorderRadius.circular(25),
+              //         color: const Color(0xFF4C4CFF),
+              //       ),
+              //       child: const Center(
+              //         child: Text(
+              //           'Sign Up',
+              //           style: TextStyle(
+              //               color: Colors.white, fontWeight: FontWeight.bold),
+              //         ),
+              //       ),
+              //     ),
+              //   ),
+              // ),
               const SizedBox(height: 20),
               RichText(
                 text: TextSpan(

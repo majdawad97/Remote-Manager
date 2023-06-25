@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:remote_manager/presentation/pages/home_pages/admin_page.dart';
+import 'package:remote_manager/presentation/pages/customer_pages/customerTabs.dart';
 
 import '../../data/models/user_role.dart';
-import '../pages/home_pages/customer_page.dart';
 import '../pages/home_pages/manager_page.dart';
 
 void routeUser(UserRole userRole, BuildContext context) {
@@ -24,7 +24,7 @@ void routeUser(UserRole userRole, BuildContext context) {
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(
-        builder: (context) => const CustomerPage(),
+        builder: (context) => const CustomerTabs(),
       ),
     );
   }

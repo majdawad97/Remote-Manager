@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+// ignore: must_be_immutable
 class CustomTextField extends StatefulWidget {
   final String customHintText;
   final IconData? icon;
@@ -30,26 +31,26 @@ class _CustomTextFieldState extends State<CustomTextField> {
       child: TextField(
         controller: widget.controller,
         obscureText: widget.obscureText,
-        style: TextStyle(fontSize: 15, color: Colors.white),
+        style: const TextStyle(fontSize: 15, color: Colors.white),
         decoration: InputDecoration(
           suffixIcon: GestureDetector(
               onTap: () {
                 toggle();
               },
               child: Icon(widget.icon, color: Colors.grey[600])),
-          contentPadding: EdgeInsets.all(30),
+          contentPadding: const EdgeInsets.all(30),
           enabledBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.transparent),
+            borderSide: const BorderSide(color: Colors.transparent),
             borderRadius: BorderRadius.circular(25),
           ),
           focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.black),
+            borderSide: const BorderSide(color: Colors.black),
             borderRadius: BorderRadius.circular(20),
           ),
           hintText: widget.customHintText,
-          fillColor: Color(0xFF262A34),
+          fillColor: const Color(0xFF262A34),
           filled: true,
-          hintStyle: TextStyle(
+          hintStyle: const TextStyle(
             color: Color(0xFF56585F),
             fontWeight: FontWeight.bold,
           ),

@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:remote_manager/data/models/product_shop.dart';
 import 'package:remote_manager/data/models/products.dart';
 import 'package:remote_manager/presentation/pages/customer_pages/product_details.dart';
+import 'package:remote_manager/presentation/widgets/product_box.dart';
 
 class CustomerPage extends StatefulWidget {
   const CustomerPage({super.key});
@@ -15,6 +16,12 @@ class _CustomerPageState extends State<CustomerPage> {
   // add product to cart
   void addToCart(Product product) {
     Provider.of<ProductShop>(context, listen: false).addItemToCart(product);
+  }
+
+  // add product to recently viewed
+  void addToRecentlyViewed(Product product) {
+    Provider.of<ProductShop>(context, listen: false)
+        .addItemToRecentlyViewed(product);
   }
 
   @override
@@ -179,9 +186,13 @@ class _CustomerPageState extends State<CustomerPage> {
                             width: 200,
                             child: InkWell(
                               onTap: () {
-                                Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => const ProductDetails(),
-                                ));
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        ProductDetails(product: eachProduct),
+                                  ),
+                                );
+                                addToRecentlyViewed(eachProduct);
                               },
                               child: Column(
                                 children: [
@@ -224,14 +235,6 @@ class _CustomerPageState extends State<CustomerPage> {
                                             ),
                                           ),
                                         ),
-                                        Positioned(
-                                          bottom: 5,
-                                          right: 5,
-                                          child: InkWell(
-                                              onTap: () =>
-                                                  addToCart(eachProduct),
-                                              child: const Icon(Icons.add)),
-                                        )
                                       ],
                                     ),
                                   ),
@@ -260,9 +263,10 @@ class _CustomerPageState extends State<CustomerPage> {
                                             ],
                                           ),
                                         ),
-                                        const Text(
-                                          'The intuitive and itnelligent Wh-1000xm4 headphones bring you new improvements in industry - leading noise cancelling technlology',
-                                          style: TextStyle(color: Colors.grey),
+                                        Text(
+                                          eachProduct.description!,
+                                          style: const TextStyle(
+                                              color: Colors.grey),
                                           overflow: TextOverflow.ellipsis,
                                           maxLines: 2,
                                         ),
@@ -296,7 +300,30 @@ class _CustomerPageState extends State<CustomerPage> {
                     ],
                   ),
                 ),
-                // ListView(),
+
+                // product tile
+                SizedBox(
+                  width: double.infinity,
+                  height: 200,
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: value.recentlyviewed.length,
+                    itemBuilder: (context, index) {
+                      Product eachViewedProduct = value.recentlyviewed[index];
+
+                      return ProductBox(
+                        product: eachViewedProduct,
+                        onPressed: () => Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => ProductDetails(
+                              product: eachViewedProduct,
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
               ],
             ),
           ),

@@ -3,7 +3,7 @@ import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:remote_manager/presentation/pages/customer_pages/customer_cart.dart';
 import 'package:remote_manager/presentation/pages/customer_pages/customer_home_page.dart';
 import 'package:remote_manager/presentation/pages/customer_pages/customer_settings.dart';
-import 'package:remote_manager/presentation/pages/customer_pages/product_details.dart';
+import 'package:remote_manager/presentation/pages/customer_pages/customer_wallet.dart';
 
 class CustomerTabs extends StatefulWidget {
   const CustomerTabs({super.key});
@@ -16,7 +16,7 @@ class _CustomerTabsState extends State<CustomerTabs> {
   int currentIndex = 0;
   List<Widget> pages = [
     const CustomerPage(),
-    const ProductDetails(),
+    const CustomerWallet(),
     const CustomerCart(),
     const CustomerSettings(),
   ];

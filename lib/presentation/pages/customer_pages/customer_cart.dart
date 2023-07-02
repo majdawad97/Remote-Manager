@@ -31,7 +31,9 @@ class _CustomerCartState extends State<CustomerCart> {
                 'Your Cart',
                 style: TextStyle(fontSize: 20),
               ),
-
+              const SizedBox(
+                height: 10,
+              ),
               // list of cart items
               Expanded(
                 child: ListView.builder(
